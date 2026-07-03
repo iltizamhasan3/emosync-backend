@@ -29,7 +29,14 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Ensure required directories exist and set permissions
-RUN mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs storage/app/public bootstrap/cache \
+RUN mkdir -p \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/framework/cache \
+        storage/framework/testing \
+        storage/logs \
+        storage/app/public \
+        bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
 
 # Copy runtime configs
