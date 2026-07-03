@@ -23,7 +23,10 @@ class MoodCheckinController extends Controller
                 ->get();
         });
 
-        return response()->json($checkins);
+        return response()->json([
+            'success' => true,
+            'data' => $checkins
+        ]);
     }
 
     public function store(Request $request)
@@ -44,6 +47,7 @@ class MoodCheckinController extends Controller
         
         if ($hasCheckedToday) {
             return response()->json([
+                'success' => false,
                 'message' => 'Anda sudah melakukan check-in hari ini'
             ], 422);
         }
@@ -66,10 +70,16 @@ class MoodCheckinController extends Controller
             Cache::forget('checkins_' . $user->id);
             Cache::forget('dashboard_' . $user->id);
             
-            return response()->json($checkin->load('pemicus'), 201);
+            return response()->json([
+                'success' => true,
+                'data' => $checkin->load('pemicus')
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['message' => 'Gagal menyimpan check-in'], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan check-in'
+            ], 500);
         }
     }
 
@@ -102,7 +112,10 @@ class MoodCheckinController extends Controller
             ];
         });
 
-        return response()->json($data);
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
     }
 
 

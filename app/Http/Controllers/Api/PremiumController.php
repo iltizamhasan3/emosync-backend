@@ -25,7 +25,10 @@ class PremiumController extends Controller
             ];
         });
 
-        return response()->json($data);
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
     }
 
     /**
@@ -54,7 +57,10 @@ class PremiumController extends Controller
             ],
         ];
 
-        return response()->json($plans);
+        return response()->json([
+            'success' => true,
+            'data' => $plans
+        ]);
     }
 
     /**
@@ -102,14 +108,20 @@ class PremiumController extends Controller
             Cache::forget('premium_status_' . $user->id);
             
             return response()->json([
+                'success' => true,
                 'message' => 'Subscription successful',
-                'is_premium' => true,
-                'plan' => $plan,
-                'expires_at' => $expiresAt,
+                'data' => [
+                    'is_premium' => true,
+                    'plan' => $plan,
+                    'expires_at' => $expiresAt,
+                ]
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['message' => 'Subscription failed: ' . $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Subscription failed: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -141,10 +153,16 @@ class PremiumController extends Controller
 
             Cache::forget('premium_status_' . $user->id);
             
-            return response()->json(['message' => 'Subscription cancelled']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscription cancelled'
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['message' => 'Failed to cancel subscription'], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to cancel subscription'
+            ], 500);
         }
     }
 }

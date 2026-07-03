@@ -54,7 +54,7 @@ class ContentController extends Controller
                 ];
             });
 
-            return response()->json($result);
+            return response()->json(array_merge(['success' => true], $result));
             
         } catch (\Exception $e) {
             return response()->json([
