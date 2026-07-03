@@ -28,8 +28,9 @@ COPY . .
 # Install dependencies (production mode)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Setup permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Ensure required directories exist and set permissions
+RUN mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs storage/app/public bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
 
 # Copy runtime configs
 COPY docker/nginx.conf /etc/nginx/nginx.conf
