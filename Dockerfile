@@ -41,6 +41,7 @@ RUN mkdir -p \
 
 # Copy runtime configs
 COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
