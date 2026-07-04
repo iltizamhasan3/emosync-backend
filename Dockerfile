@@ -10,6 +10,7 @@ RUN apk add --no-cache \
     zip \
     unzip \
     git \
+    postgresql-dev \
     $PHPIZE_DEPS \
     linux-headers \
     && docker-php-ext-install pdo_mysql pdo_pgsql bcmath gd \
