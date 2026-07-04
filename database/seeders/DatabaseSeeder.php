@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PemicuSeeder::class,
             ContentSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }

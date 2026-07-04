@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\ContentController as AdminContentController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ContentController;
@@ -70,4 +73,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payment/simulate/{transactionId}', [PaymentController::class, 'simulatePayment']);
     Route::delete('/payment/cancel/{transactionId}', [PaymentController::class, 'cancelTransaction']);
     Route::get('/payment/history', [PaymentController::class, 'getUserTransactions']);
+});
+
+// ============ ADMIN ROUTES (public: login) ============
+Route::post('/admin/login', [AdminAuthController::class, 'login']);
+
+// ============ ADMIN ROUTES (protected: auth + admin) ============
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/me', [AdminAuthController::class, 'me']);
+    Route::get('/dashboard', [AdminDashboardController::class, 'index']);
+
+    Route::get('/konten', [AdminContentController::class, 'index']);
+    Route::get('/konten/{id}', [AdminContentController::class, 'show']);
+    Route::post('/konten', [AdminContentController::class, 'store']);
+    Route::match(['put', 'post'], '/konten/{id}', [AdminContentController::class, 'update']);
+    Route::delete('/konten/{id}', [AdminContentController::class, 'destroy']);
+    Route::post('/konten/upload', [AdminContentController::class, 'upload']);
 });
