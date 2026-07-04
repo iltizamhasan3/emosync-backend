@@ -28,7 +28,10 @@ class PemicuSeeder extends Seeder
         ];
 
         foreach ($pemicus as $pemicu) {
-            Pemicu::create($pemicu);
+            Pemicu::firstOrCreate(
+                ['nama' => $pemicu['nama']],
+                $pemicu
+            );
         }
     }
 }
