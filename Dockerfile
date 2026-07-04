@@ -12,7 +12,7 @@ RUN apk add --no-cache \
     git \
     $PHPIZE_DEPS \
     linux-headers \
-    && docker-php-ext-install pdo_mysql bcmath gd \
+    && docker-php-ext-install pdo_mysql pdo_pgsql bcmath gd \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apk del $PHPIZE_DEPS linux-headers

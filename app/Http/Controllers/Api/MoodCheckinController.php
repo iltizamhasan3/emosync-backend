@@ -123,13 +123,13 @@ class MoodCheckinController extends Controller
     {
         $result = DB::table('mood_checkins')
             ->where('user_id', $userId)
-            ->select(DB::raw('AVG(CASE 
-                WHEN mood = "happy" THEN 4
-                WHEN mood = "calm" THEN 3
-                WHEN mood = "anxious" THEN 2
-                WHEN mood = "sad" THEN 1
+            ->select(DB::raw("AVG(CASE 
+                WHEN mood = 'happy' THEN 4
+                WHEN mood = 'calm' THEN 3
+                WHEN mood = 'anxious' THEN 2
+                WHEN mood = 'sad' THEN 1
                 ELSE 0
-            END) as average'))
+            END) as average"))
             ->first();
 
         return $result->average ? round($result->average, 1) : 0;
