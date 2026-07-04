@@ -1,58 +1,203 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<h1 align="center">🧠 EmoSync — Backend API</h1>
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel"/>
+  <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
+  <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"/>
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis"/>
+  <img src="https://img.shields.io/badge/Upstash-00E9A3?style=for-the-badge&logo=upstash&logoColor=white" alt="Upstash"/>
+  <img src="https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Railway"/>
+  <img src="https://img.shields.io/badge/Sanctum-4A5568?style=for-the-badge&logo=laravel&logoColor=white" alt="Sanctum"/>
+</div>
+
+<br/>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  🐘 REST API untuk mood tracking app &nbsp;·&nbsp; 🔐 Sanctum auth &nbsp;·&nbsp; 💬 Real-time chat &nbsp;·&nbsp; 💳 Simulasi pembayaran &nbsp;·&nbsp; 📊 Streak & dashboard
 </p>
 
-## About Laravel
+<hr/>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✨ Fitur API
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🔐 Autentikasi
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/register` | `POST` | Registrasi akun + default settings |
+| `/api/login` | `POST` | Login via email/username |
+| `/api/logout` | `POST` | Hapus token Sanctum |
+| `/api/user` | `GET` | Data user saat ini |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 👤 Profil
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/profile` | `GET` | Lihat profil (cache 120s) |
+| `/api/profile` | `PUT` | Edit nama & avatar |
 
-## Learning Laravel
+### 📊 Mood Check-in
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/checkin` | `POST` | Catat mood (happy/anxious/calm/sad) + pemicu |
+| `/api/checkin` | `GET` | Riwayat 30 check-in terakhir (cache 60s) |
+| `/api/dashboard` | `GET` | Streak, grafik mingguan, distribusi mood |
+| `/api/pemicu` | `GET` | Daftar trigger mood |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 👥 Pertemanan
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/friends` | `GET` | Daftar teman (cache 60s) |
+| `/api/friends/add` | `POST` | Kirim permintaan via username |
+| `/api/friends/search` | `GET` | Cari user |
+| `/api/friends/requests` | `GET` | Permintaan masuk/keluar (cache 30s) |
+| `/api/friends/accept/{id}` | `POST` | Terima permintaan |
+| `/api/friends/{id}` | `DELETE` | Hapus teman / tolak |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 💬 Chat
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/chat/{friendId}` | `GET` | Riwayat pesan dengan teman |
+| `/api/chat/send` | `POST` | Kirim pesan |
+| `/api/chat/unread/count` | `GET` | Total pesan belum dibaca |
+| `/api/chat/unread/list` | `GET` | Per-friend unread count |
+| `/api/chat/read/{friendId}` | `PUT` | Tandai sudah dibaca |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 📚 Konten
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/konten` | `GET` | Daftar konten (cache 300s), premium tersembunyi |
+| `/api/konten/{id}` | `GET` | Detail konten, premium terkunci |
 
-## Agentic Development
+### ⚙️ Pengaturan
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/settings` | `GET` | Notifikasi & privasi |
+| `/api/settings/notification` | `PUT` | Update notifikasi |
+| `/api/settings/privacy` | `PUT` | Update privasi |
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 💎 Premium & Pembayaran
+| Endpoint | Method | Deskripsi |
+|----------|--------|-----------|
+| `/api/premium/status` | `GET` | Status premium (cache 60s) |
+| `/api/premium/plans` | `GET` | Paket harga |
+| `/api/premium/subscribe` | `POST` | Langganan premium |
+| `/api/premium/cancel` | `POST` | Batalkan langganan |
+| `/api/payment/plans` | `GET` | Opsi pembayaran |
+| `/api/payment/create` | `POST` | Buat transaksi (QRIS/VA) |
+| `/api/payment/status/{id}` | `GET` | Cek status transaksi |
+| `/api/payment/simulate/{id}` | `POST` | Simulasi bayar (demo) |
+| `/api/payment/cancel/{id}` | `DELETE` | Batal transaksi |
+| `/api/payment/history` | `GET` | Riwayat transaksi |
 
-```bash
-composer require laravel/boost --dev
+<hr/>
 
-php artisan boost:install
+## 🛠️ Tech Stack
+
+### Backend
+| Teknologi | Kegunaan |
+|-----------|----------|
+| [Laravel 13](https://laravel.com/) | Framework PHP |
+| [Sanctum](https://laravel.com/docs/sanctum) | API token auth (30 hari expiry) |
+| [MySQL](https://www.mysql.com/) / [PostgreSQL](https://www.postgresql.org/) | Database relasional |
+| [Redis](https://redis.io/) via [predis](https://github.com/predis/predis) | Cache & session opsional |
+| [Database Cache](https://laravel.com/docs/cache) | Cache driver (default) |
+| [Database Session](https://laravel.com/docs/session) | Session driver (default) |
+| [Database Queue](https://laravel.com/docs/queues) | Queue driver (default) |
+
+### Deployment
+| Layanan | Fungsi |
+|---------|--------|
+| [Railway](https://railway.app/) | Hosting Laravel (serverless dormant) |
+| [Supabase](https://supabase.com/) | PostgreSQL hosting (free 500MB) |
+| [Upstash](https://upstash.com/) | Redis serverless (free 100MB) |
+
+### Frontend
+| Repo | Tech |
+|------|------|
+| [emosync](https://github.com/iltizamhasan3/emosync) | Flutter + Dart |
+
+<hr/>
+
+## 🚀 Deployed API
+
+```
+Base URL: https://emosync-backend-production.up.railway.app/api
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Response format:
+```json
+{
+  "success": true,
+  "data": { ... },
+  "message": "..."
+}
+```
 
-## Contributing
+Semua protected endpoint require header:
+```
+Authorization: Bearer <sanctum_token>
+Accept: application/json
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+<hr/>
 
-## Code of Conduct
+## ⚡ Fitur Unggulan
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**🔥 Streak Tracking** — Backend hitung streak otomatis berdasarkan rangkaian check-in harian berurutan. Gap >1 hari reset ke 1.
 
-## Security Vulnerabilities
+**📈 Dashboard Cerdas** — Rata-rata mood (happy=4, calm=3, anxious=2, sad=1) + distribusi mingguan + grafik.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**💬 Real-time Chat** — Sistem pesan antar teman dengan unread counter per-friend dan auto mark-as-read.
 
-## License
+**💳 Simulasi Pembayaran** — Flow end-to-end: create → VA/QRIS → simulate bayar → premium aktif. Virtual account per transaksi.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**🔒 Premium Gating** — Konten premium otomatis tersembunyi dari user free. Langganan dengan expiry date.
+
+**🧠 Support Analyzer** — Analisis pola mood → rekomendasi level dukungan (aman/ringan/profesional).
+
+<hr/>
+
+## 🗄️ Database
+
+| Tabel | Fungsi |
+|-------|--------|
+| `users` | Akun, premium status, streak |
+| `mood_checkins` | Catatan mood harian |
+| `pemicus` | Trigger mood (stres, lelah, dll) |
+| `checkin_pemicus` | Relasi checkin ↔ pemicu |
+| `friendships` | Relasi pertemanan + status |
+| `chats` | Pesan antar teman |
+| `contents` | Artikel/video/kutipan |
+| `subscriptions` | Langganan premium |
+| `transactions` | Riwayat pembayaran |
+| `user_settings` | Notifikasi & privasi per user |
+
+<hr/>
+
+## 🖥️ Running Locally
+
+```bash
+git clone https://github.com/iltizamhasan3/emosync-backend.git
+cd emosync-backend
+
+composer install
+cp .env.example .env
+php artisan key:generate
+
+# Setup MySQL database, lalu:
+php artisan migrate
+php artisan db:seed --class=PemicuSeeder
+
+php artisan serve
+# API aktif di http://localhost:8000/api
+```
+
+<hr/>
+
+<div align="center">
+  <p>Dibuat dengan ❤️ menggunakan Laravel & Flutter</p>
+  <p>
+    <a href="https://github.com/iltizamhasan3/emosync">Frontend Repo</a> •
+    <a href="https://github.com/iltizamhasan3/emosync-backend">Backend Repo</a>
+  </p>
+</div>
