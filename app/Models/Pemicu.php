@@ -9,7 +9,7 @@ class Pemicu extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama', 'ikon'];
+    protected $fillable = ['nama', 'ikon', 'kategori'];
 
     public function moodCheckins()
     {

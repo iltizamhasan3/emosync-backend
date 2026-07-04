@@ -11,26 +11,32 @@ class DummyDataSeeder extends Seeder
     public function run(): void
     {
         // User dummy
-        User::create([
-            'name' => 'Demas Axel',
-            'email' => 'demas@example.com',
-            'password' => bcrypt('password123'),
-        ]);
+        User::firstOrCreate(
+            ['username' => 'demasaxel'],
+            [
+                'name' => 'Demas Axel',
+                'email' => 'demas@example.com',
+                'password' => bcrypt('password123'),
+            ]
+        );
 
         // Pemicu dummy
         $pemicus = [
-            ['nama' => 'Kurang Tidur', 'ikon' => '😴', 'kategori' => 'aktivitas'],
-            ['nama' => 'Konflik Sosial', 'ikon' => '😤', 'kategori' => 'sosial'],
-            ['nama' => 'Lingkungan Bising', 'ikon' => '🔊', 'kategori' => 'lingkungan'],
-            ['nama' => 'Banyak Tugas', 'ikon' => '📚', 'kategori' => 'aktivitas'],
-            ['nama' => 'Olahraga', 'ikon' => '🏃', 'kategori' => 'aktivitas'],
-            ['nama' => 'Kurang Makan', 'ikon' => '🍽️', 'kategori' => 'aktivitas'],
-            ['nama' => 'Hujan', 'ikon' => '🌧️', 'kategori' => 'lingkungan'],
-            ['nama' => 'Support Teman', 'ikon' => '💪', 'kategori' => 'sosial'],
+            ['nama' => 'Kurang Tidur', 'ikon' => '😴', 'kategori' => 'Aktivitas'],
+            ['nama' => 'Konflik Sosial', 'ikon' => '😤', 'kategori' => 'Sosial'],
+            ['nama' => 'Lingkungan Bising', 'ikon' => '🔊', 'kategori' => 'Lingkungan'],
+            ['nama' => 'Banyak Tugas', 'ikon' => '📚', 'kategori' => 'Aktivitas'],
+            ['nama' => 'Olahraga', 'ikon' => '🏃', 'kategori' => 'Aktivitas'],
+            ['nama' => 'Kurang Makan', 'ikon' => '🍽️', 'kategori' => 'Aktivitas'],
+            ['nama' => 'Hujan', 'ikon' => '🌧️', 'kategori' => 'Lingkungan'],
+            ['nama' => 'Support Teman', 'ikon' => '💪', 'kategori' => 'Sosial'],
         ];
 
         foreach ($pemicus as $pemicu) {
-            Pemicu::create($pemicu);
+            Pemicu::firstOrCreate(
+                ['nama' => $pemicu['nama']],
+                $pemicu
+            );
         }
     }
 }

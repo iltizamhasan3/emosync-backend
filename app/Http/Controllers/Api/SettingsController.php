@@ -17,6 +17,7 @@ class SettingsController extends Controller
         $settings = $request->user()->getSettings();
         
         return response()->json([
+            'success' => true,
             'notification' => [
                 'daily_reminder' => $settings->notif_daily_reminder,
                 'weekly_report' => $settings->notif_weekly_report,
@@ -63,6 +64,7 @@ class SettingsController extends Controller
         $settings->save();
         
         return response()->json([
+            'success' => true,
             'message' => 'Notification settings updated successfully',
             'data' => [
                 'daily_reminder' => $settings->notif_daily_reminder,
@@ -101,6 +103,7 @@ class SettingsController extends Controller
         $settings->save();
         
         return response()->json([
+            'success' => true,
             'message' => 'Privacy settings updated successfully',
             'data' => [
                 'show_mood' => $settings->privacy_show_mood,

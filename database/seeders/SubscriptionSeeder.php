@@ -10,19 +10,21 @@ class SubscriptionSeeder extends Seeder
 {
     public function run(): void
     {
-        // Beri premium untuk user pertama (Demas Axel)
         $user = User::where('username', 'demasaxel')->first();
+        if (!$user) {
+            $user = User::where('email', 'demas@example.com')->first();
+        }
         if ($user) {
             Subscription::create([
                 'user_id' => $user->id,
-                'plan' => 'premium_monthly',
-                'start_date' => now(),
-                'end_date' => now()->addDays(30),
+                'plan' => 'monthly',
                 'status' => 'active',
-                'payment_method' => 'demo',
-                'transaction_id' => 'DEMO_' . time(),
+                'expires_at' => now()->addDays(30),
             ]);
-            $user->activatePremium(30);
+            $user->is_premium = true;
+            $user->premium_plan = 'monthly';
+            $user->premium_expiry = now()->addDays(30);
+            $user->save();
         }
     }
 }

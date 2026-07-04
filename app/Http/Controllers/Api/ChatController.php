@@ -32,6 +32,24 @@ class ChatController extends Controller
             ], 404);
         }
 
+        // Cek apakah mereka berteman
+        $isFriend = \App\Models\Friendship::where(function($query) use ($user, $friendId) {
+            $query->where('user_id', $user->id)
+                  ->where('friend_id', $friendId)
+                  ->where('status', 'accepted');
+        })->orWhere(function($query) use ($user, $friendId) {
+            $query->where('user_id', $friendId)
+                  ->where('friend_id', $user->id)
+                  ->where('status', 'accepted');
+        })->exists();
+
+        if (!$isFriend) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda harus berteman untuk melihat pesan'
+            ], 403);
+        }
+
         // Ambil pesan antara user dan friend
         $messages = Chat::between($user->id, $friendId)
             ->orderBy('created_at', 'asc')
