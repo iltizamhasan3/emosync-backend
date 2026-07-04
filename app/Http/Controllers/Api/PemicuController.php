@@ -10,10 +10,11 @@ class PemicuController extends Controller
 {
     public function index()
     {
-        $pemicus = Cache::remember('pemicu_all', 3600, function () {
-            return Pemicu::all();
-        });
+        $pemicus = Pemicu::all();
 
-        return response()->json($pemicus);
+        return response()->json([
+            'success' => true,
+            'data' => $pemicus,
+        ]);
     }
 }
