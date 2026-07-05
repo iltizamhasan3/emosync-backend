@@ -1,4 +1,34 @@
 <?php return array (
+  'view' => 
+  array (
+    'paths' => 
+    array (
+      0 => '/tmp/opencode/emosync-backend/resources/views',
+    ),
+    'compiled' => '/tmp/opencode/emosync-backend/storage/framework/views',
+  ),
+  'hashing' => 
+  array (
+    'driver' => 'bcrypt',
+    'bcrypt' => 
+    array (
+      'rounds' => '12',
+      'verify' => true,
+      'limit' => NULL,
+    ),
+    'argon' => 
+    array (
+      'memory' => 65536,
+      'threads' => 1,
+      'time' => 4,
+      'verify' => true,
+    ),
+    'rehash_on_login' => true,
+  ),
+  'concurrency' => 
+  array (
+    'default' => 'process',
+  ),
   'broadcasting' => 
   array (
     'default' => 'log',
@@ -55,50 +85,20 @@
       ),
     ),
   ),
-  'concurrency' => 
-  array (
-    'default' => 'process',
-  ),
-  'hashing' => 
-  array (
-    'driver' => 'bcrypt',
-    'bcrypt' => 
-    array (
-      'rounds' => '12',
-      'verify' => true,
-      'limit' => NULL,
-    ),
-    'argon' => 
-    array (
-      'memory' => 65536,
-      'threads' => 1,
-      'time' => 4,
-      'verify' => true,
-    ),
-    'rehash_on_login' => true,
-  ),
-  'view' => 
-  array (
-    'paths' => 
-    array (
-      0 => '/var/www/html/resources/views',
-    ),
-    'compiled' => '/var/www/html/storage/framework/views',
-  ),
   'app' => 
   array (
-    'name' => 'Laravel',
-    'env' => 'local',
-    'debug' => true,
-    'url' => 'http://localhost:8000',
-    'frontend_url' => 'http://localhost:5173',
+    'name' => 'EmoSync',
+    'env' => 'production',
+    'debug' => false,
+    'url' => '${APP_URL}',
+    'frontend_url' => '${FRONTEND_URL}',
     'asset_url' => NULL,
-    'timezone' => 'UTC',
-    'locale' => 'en',
+    'timezone' => 'Asia/Jakarta',
+    'locale' => 'id',
     'fallback_locale' => 'en',
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'id_ID',
     'cipher' => 'AES-256-CBC',
-    'key' => 'base64:6NCGNAK9d+9qjeWLuCd8zVnOPSJSg13o5oV8i/NuYSI=',
+    'key' => '',
     'previous_keys' => 
     array (
     ),
@@ -250,8 +250,14 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => '/var/www/html/storage/framework/cache/data',
-        'lock_path' => '/var/www/html/storage/framework/cache/data',
+        'path' => '/tmp/opencode/emosync-backend/storage/framework/cache/data',
+        'lock_path' => '/tmp/opencode/emosync-backend/storage/framework/cache/data',
+      ),
+      'storage' => 
+      array (
+        'driver' => 'storage',
+        'disk' => NULL,
+        'path' => 'framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -286,7 +292,7 @@
         'driver' => 'dynamodb',
         'key' => '',
         'secret' => '',
-        'region' => 'us-east-1',
+        'region' => 'ap-southeast-1',
         'table' => 'cache',
         'endpoint' => NULL,
       ),
@@ -304,7 +310,7 @@
         ),
       ),
     ),
-    'prefix' => 'laravel-cache-',
+    'prefix' => 'emosync-cache-',
     'serializable_classes' => false,
   ),
   'cors' => 
@@ -320,7 +326,7 @@
     ),
     'allowed_origins' => 
     array (
-      0 => 'http://localhost:5173',
+      0 => '${FRONTEND_URL}',
     ),
     'allowed_origins_patterns' => 
     array (
@@ -338,14 +344,14 @@
   ),
   'database' => 
   array (
-    'default' => 'mysql',
+    'default' => 'pgsql',
     'connections' => 
     array (
       'sqlite' => 
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'emosync',
+        'database' => '${SUPABASE_DATABASE:-postgres}',
         'prefix' => '',
         'prefix_indexes' => NULL,
         'foreign_key_constraints' => true,
@@ -361,11 +367,11 @@
       array (
         'driver' => 'mysql',
         'url' => NULL,
-        'host' => 'mysql',
-        'port' => '3306',
-        'database' => 'emosync',
-        'username' => 'emosync',
-        'password' => 'emosync123',
+        'host' => '${SUPABASE_HOST}',
+        'port' => '${SUPABASE_PORT:-6543}',
+        'database' => '${SUPABASE_DATABASE:-postgres}',
+        'username' => '${SUPABASE_USER}',
+        'password' => '${SUPABASE_PASSWORD}',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -381,11 +387,11 @@
       array (
         'driver' => 'mariadb',
         'url' => NULL,
-        'host' => 'mysql',
-        'port' => '3306',
-        'database' => 'emosync',
-        'username' => 'emosync',
-        'password' => 'emosync123',
+        'host' => '${SUPABASE_HOST}',
+        'port' => '${SUPABASE_PORT:-6543}',
+        'database' => '${SUPABASE_DATABASE:-postgres}',
+        'username' => '${SUPABASE_USER}',
+        'password' => '${SUPABASE_PASSWORD}',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -401,11 +407,11 @@
       array (
         'driver' => 'pgsql',
         'url' => NULL,
-        'host' => 'mysql',
-        'port' => '3306',
-        'database' => 'emosync',
-        'username' => 'emosync',
-        'password' => 'emosync123',
+        'host' => '${SUPABASE_HOST}',
+        'port' => '${SUPABASE_PORT:-6543}',
+        'database' => '${SUPABASE_DATABASE:-postgres}',
+        'username' => '${SUPABASE_USER}',
+        'password' => '${SUPABASE_PASSWORD}',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -416,11 +422,11 @@
       array (
         'driver' => 'sqlsrv',
         'url' => NULL,
-        'host' => 'mysql',
-        'port' => '3306',
-        'database' => 'emosync',
-        'username' => 'emosync',
-        'password' => 'emosync123',
+        'host' => '${SUPABASE_HOST}',
+        'port' => '${SUPABASE_PORT:-6543}',
+        'database' => '${SUPABASE_DATABASE:-postgres}',
+        'username' => '${SUPABASE_USER}',
+        'password' => '${SUPABASE_PASSWORD}',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -437,24 +443,26 @@
       'options' => 
       array (
         'cluster' => 'redis',
-        'prefix' => 'laravel_database_',
+        'prefix' => 'emosync_database_',
       ),
       'default' => 
       array (
         'url' => NULL,
-        'host' => 'redis',
+        'scheme' => 'tcp',
+        'host' => '${UPSTASH_HOST}',
         'username' => NULL,
-        'password' => NULL,
-        'port' => '6379',
+        'password' => '${UPSTASH_PASSWORD}',
+        'port' => '${UPSTASH_PORT:-6379}',
         'database' => '0',
       ),
       'cache' => 
       array (
         'url' => NULL,
-        'host' => 'redis',
+        'scheme' => 'tcp',
+        'host' => '${UPSTASH_HOST}',
         'username' => NULL,
-        'password' => NULL,
-        'port' => '6379',
+        'password' => '${UPSTASH_PASSWORD}',
+        'port' => '${UPSTASH_PORT:-6379}',
         'database' => '1',
       ),
     ),
@@ -467,7 +475,7 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/html/storage/app/private',
+        'root' => '/tmp/opencode/emosync-backend/storage/app/private',
         'serve' => true,
         'throw' => false,
         'report' => false,
@@ -475,8 +483,8 @@
       'public' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/html/storage/app/public',
-        'url' => 'http://localhost:8000/storage',
+        'root' => '/tmp/opencode/emosync-backend/storage/app/public',
+        'url' => '${APP_URL}/storage',
         'visibility' => 'public',
         'throw' => false,
         'report' => false,
@@ -486,7 +494,7 @@
         'driver' => 's3',
         'key' => '',
         'secret' => '',
-        'region' => 'us-east-1',
+        'region' => 'ap-southeast-1',
         'bucket' => '',
         'url' => NULL,
         'endpoint' => NULL,
@@ -494,10 +502,24 @@
         'throw' => false,
         'report' => false,
       ),
+      'supabase' => 
+      array (
+        'driver' => 's3',
+        'key' => '${SUPABASE_S3_KEY}',
+        'secret' => '${SUPABASE_S3_SECRET}',
+        'region' => '${SUPABASE_S3_REGION:-ap-southeast-1}',
+        'bucket' => '${SUPABASE_BUCKET:-emosync}',
+        'url' => '${SUPABASE_S3_URL}',
+        'endpoint' => '${SUPABASE_S3_ENDPOINT}',
+        'use_path_style_endpoint' => true,
+        'visibility' => 'public',
+        'throw' => false,
+        'report' => false,
+      ),
     ),
     'links' => 
     array (
-      '/var/www/html/public/storage' => '/var/www/html/storage/app/public',
+      '/tmp/opencode/emosync-backend/public/storage' => '/tmp/opencode/emosync-backend/storage/app/public',
     ),
   ),
   'logging' => 
@@ -522,15 +544,15 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => '/var/www/html/storage/logs/laravel.log',
-        'level' => 'debug',
+        'path' => '/tmp/opencode/emosync-backend/storage/logs/laravel.log',
+        'level' => 'warning',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => '/var/www/html/storage/logs/laravel.log',
-        'level' => 'debug',
+        'path' => '/tmp/opencode/emosync-backend/storage/logs/laravel.log',
+        'level' => 'warning',
         'days' => 14,
         'replace_placeholders' => true,
       ),
@@ -538,15 +560,15 @@
       array (
         'driver' => 'slack',
         'url' => NULL,
-        'username' => 'Laravel',
+        'username' => 'EmoSync',
         'emoji' => ':boom:',
-        'level' => 'debug',
+        'level' => 'warning',
         'replace_placeholders' => true,
       ),
       'papertrail' => 
       array (
         'driver' => 'monolog',
-        'level' => 'debug',
+        'level' => 'warning',
         'handler' => 'Monolog\\Handler\\SyslogUdpHandler',
         'handler_with' => 
         array (
@@ -562,7 +584,7 @@
       'stderr' => 
       array (
         'driver' => 'monolog',
-        'level' => 'debug',
+        'level' => 'warning',
         'handler' => 'Monolog\\Handler\\StreamHandler',
         'handler_with' => 
         array (
@@ -577,14 +599,14 @@
       'syslog' => 
       array (
         'driver' => 'syslog',
-        'level' => 'debug',
+        'level' => 'warning',
         'facility' => 8,
         'replace_placeholders' => true,
       ),
       'errorlog' => 
       array (
         'driver' => 'errorlog',
-        'level' => 'debug',
+        'level' => 'warning',
         'replace_placeholders' => true,
       ),
       'null' => 
@@ -594,7 +616,7 @@
       ),
       'emergency' => 
       array (
-        'path' => '/var/www/html/storage/logs/laravel.log',
+        'path' => '/tmp/opencode/emosync-backend/storage/logs/laravel.log',
       ),
     ),
   ),
@@ -613,7 +635,7 @@
         'username' => NULL,
         'password' => NULL,
         'timeout' => NULL,
-        'local_domain' => 'localhost',
+        'local_domain' => NULL,
       ),
       'ses' => 
       array (
@@ -665,14 +687,14 @@
     'from' => 
     array (
       'address' => 'hello@example.com',
-      'name' => 'Laravel',
+      'name' => 'EmoSync',
     ),
     'markdown' => 
     array (
       'theme' => 'default',
       'paths' => 
       array (
-        0 => '/var/www/html/resources/views/vendor/mail',
+        0 => '/tmp/opencode/emosync-backend/resources/views/vendor/mail',
       ),
       'extensions' => 
       array (
@@ -681,7 +703,7 @@
   ),
   'queue' => 
   array (
-    'default' => 'database',
+    'default' => 'redis',
     'connections' => 
     array (
       'sync' => 
@@ -714,7 +736,7 @@
         'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
         'queue' => 'default',
         'suffix' => NULL,
-        'region' => 'us-east-1',
+        'region' => 'ap-southeast-1',
         'after_commit' => false,
       ),
       'redis' => 
@@ -746,13 +768,13 @@
     ),
     'batching' => 
     array (
-      'database' => 'mysql',
+      'database' => 'pgsql',
       'table' => 'job_batches',
     ),
     'failed' => 
     array (
       'driver' => 'database-uuids',
-      'database' => 'mysql',
+      'database' => 'pgsql',
       'table' => 'failed_jobs',
     ),
   ),
@@ -760,15 +782,13 @@
   array (
     'stateful' => 
     array (
-      0 => 'localhost:5173',
-      1 => 'localhost:3000',
-      2 => '127.0.0.1:5173',
+      0 => '${SANCTUM_STATEFUL_DOMAINS}',
     ),
     'guard' => 
     array (
       0 => 'web',
     ),
-    'expiration' => NULL,
+    'expiration' => 43200,
     'token_prefix' => '',
     'middleware' => 
     array (
@@ -791,7 +811,7 @@
     array (
       'key' => '',
       'secret' => '',
-      'region' => 'us-east-1',
+      'region' => 'ap-southeast-1',
     ),
     'slack' => 
     array (
@@ -804,11 +824,11 @@
   ),
   'session' => 
   array (
-    'driver' => 'redis',
+    'driver' => 'array',
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/var/www/html/storage/framework/sessions',
+    'files' => '/tmp/opencode/emosync-backend/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -817,7 +837,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'laravel-session',
+    'cookie' => 'emosync-session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,
