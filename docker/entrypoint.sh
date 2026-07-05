@@ -9,6 +9,10 @@ fi
 # Storage link
 php artisan storage:link --no-interaction 2>/dev/null || true
 
+# Clear & cache config (ensures stale cached config from repo is not used)
+php artisan optimize:clear --no-interaction || true
+php artisan config:cache --no-interaction || true
+
 # Run migrations on startup (safe for Railway)
 php artisan migrate --force --no-interaction || true
 
