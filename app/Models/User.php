@@ -21,6 +21,7 @@ class User extends Authenticatable
         'premium_plan',
         'premium_expiry',
         'avatar',
+        'fcm_device_token',
     ];
 
     protected $hidden = [

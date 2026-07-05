@@ -124,6 +124,30 @@ class FriendshipController extends Controller
             ]);
             
             DB::commit();
+
+            // Send FCM Push Notification
+            if ($friend->fcm_device_token) {
+                $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+                $fcmKey = env('FCM_SERVER_KEY', 'default_key'); // Set in .env
+
+                $fcmNotification = [
+                    'to' => $friend->fcm_device_token,
+                    'notification' => [
+                        'title' => 'Permintaan Pertemanan',
+                        'body' => $user->name . ' mengirimkan permintaan pertemanan.',
+                        'sound' => 'default'
+                    ],
+                    'data' => [
+                        'type' => 'friend_request',
+                        'user_id' => $user->id
+                    ]
+                ];
+
+                \Illuminate\Support\Facades\Http::withHeaders([
+                    'Authorization' => 'key=' . $fcmKey,
+                    'Content-Type' => 'application/json'
+                ])->post($fcmUrl, $fcmNotification);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

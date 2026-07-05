@@ -31,6 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('/device-tokens', [ProfileController::class, 'updateDeviceToken']);
+    
+    // Reports
+    Route::get('/reports/weekly', [\App\Http\Controllers\Api\ReportController::class, 'weekly']);
     
     // Mood Checkin
     Route::post('/checkin', [MoodCheckinController::class, 'store']);

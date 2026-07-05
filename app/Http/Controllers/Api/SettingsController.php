@@ -20,6 +20,7 @@ class SettingsController extends Controller
             'success' => true,
             'notification' => [
                 'daily_reminder' => $settings->notif_daily_reminder,
+                'daily_reminder_time' => $settings->daily_reminder_time,
                 'weekly_report' => $settings->notif_weekly_report,
                 'friend_activity' => $settings->notif_friend_activity,
                 'tips_insights' => $settings->notif_tips_insights,
@@ -41,6 +42,7 @@ class SettingsController extends Controller
     {
         $request->validate([
             'daily_reminder' => 'sometimes|boolean',
+            'daily_reminder_time' => 'sometimes|string',
             'weekly_report' => 'sometimes|boolean',
             'friend_activity' => 'sometimes|boolean',
             'tips_insights' => 'sometimes|boolean',
@@ -50,6 +52,9 @@ class SettingsController extends Controller
         
         if ($request->has('daily_reminder')) {
             $settings->notif_daily_reminder = $request->daily_reminder;
+        }
+        if ($request->has('daily_reminder_time')) {
+            $settings->daily_reminder_time = $request->daily_reminder_time;
         }
         if ($request->has('weekly_report')) {
             $settings->notif_weekly_report = $request->weekly_report;
@@ -68,6 +73,7 @@ class SettingsController extends Controller
             'message' => 'Notification settings updated successfully',
             'data' => [
                 'daily_reminder' => $settings->notif_daily_reminder,
+                'daily_reminder_time' => $settings->daily_reminder_time,
                 'weekly_report' => $settings->notif_weekly_report,
                 'friend_activity' => $settings->notif_friend_activity,
                 'tips_insights' => $settings->notif_tips_insights,
