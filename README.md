@@ -5,8 +5,6 @@
   <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP"/>
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"/>
-  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis"/>
-  <img src="https://img.shields.io/badge/Upstash-00E9A3?style=for-the-badge&logo=upstash&logoColor=white" alt="Upstash"/>
   <img src="https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Railway"/>
   <img src="https://img.shields.io/badge/Sanctum-4A5568?style=for-the-badge&logo=laravel&logoColor=white" alt="Sanctum"/>
 </div>
@@ -32,24 +30,24 @@
 ### 👤 Profil
 | Endpoint | Method | Deskripsi |
 |----------|--------|-----------|
-| `/api/profile` | `GET` | Lihat profil (cache 120s) |
+| `/api/profile` | `GET` | Lihat profil |
 | `/api/profile` | `PUT` | Edit nama & avatar |
 
 ### 📊 Mood Check-in
 | Endpoint | Method | Deskripsi |
 |----------|--------|-----------|
 | `/api/checkin` | `POST` | Catat mood (happy/anxious/calm/sad) + pemicu |
-| `/api/checkin` | `GET` | Riwayat 30 check-in terakhir (cache 60s) |
+| `/api/checkin` | `GET` | Riwayat 30 check-in terakhir |
 | `/api/dashboard` | `GET` | Streak, grafik mingguan, distribusi mood |
 | `/api/pemicu` | `GET` | Daftar trigger mood |
 
 ### 👥 Pertemanan
 | Endpoint | Method | Deskripsi |
 |----------|--------|-----------|
-| `/api/friends` | `GET` | Daftar teman (cache 60s) |
+| `/api/friends` | `GET` | Daftar teman |
 | `/api/friends/add` | `POST` | Kirim permintaan via username |
 | `/api/friends/search` | `GET` | Cari user |
-| `/api/friends/requests` | `GET` | Permintaan masuk/keluar (cache 30s) |
+| `/api/friends/requests` | `GET` | Permintaan masuk/keluar |
 | `/api/friends/accept/{id}` | `POST` | Terima permintaan |
 | `/api/friends/{id}` | `DELETE` | Hapus teman / tolak |
 
@@ -65,7 +63,7 @@
 ### 📚 Konten
 | Endpoint | Method | Deskripsi |
 |----------|--------|-----------|
-| `/api/konten` | `GET` | Daftar konten (cache 300s), premium tersembunyi |
+| `/api/konten` | `GET` | Daftar konten, premium tersembunyi |
 | `/api/konten/{id}` | `GET` | Detail konten, premium terkunci |
 
 ### ⚙️ Pengaturan
@@ -78,7 +76,7 @@
 ### 💎 Premium & Pembayaran
 | Endpoint | Method | Deskripsi |
 |----------|--------|-----------|
-| `/api/premium/status` | `GET` | Status premium (cache 60s) |
+| `/api/premium/status` | `GET` | Status premium |
 | `/api/premium/plans` | `GET` | Paket harga |
 | `/api/premium/subscribe` | `POST` | Langganan premium |
 | `/api/premium/cancel` | `POST` | Batalkan langganan |
@@ -99,17 +97,15 @@
 | [Laravel 13](https://laravel.com/) | Framework PHP |
 | [Sanctum](https://laravel.com/docs/sanctum) | API token auth (30 hari expiry) |
 | [MySQL](https://www.mysql.com/) / [PostgreSQL](https://www.postgresql.org/) | Database relasional |
-| [Redis](https://redis.io/) via [predis](https://github.com/predis/predis) | Cache & session opsional |
-| [Database Cache](https://laravel.com/docs/cache) | Cache driver (default) |
-| [Database Session](https://laravel.com/docs/session) | Session driver (default) |
-| [Database Queue](https://laravel.com/docs/queues) | Queue driver (default) |
+| [File Cache](https://laravel.com/docs/cache) | Cache driver |
+| [Database Session](https://laravel.com/docs/session) | Session driver |
+| [Database Queue](https://laravel.com/docs/queues) | Queue driver |
 
 ### Deployment
 | Layanan | Fungsi |
 |---------|--------|
 | [Railway](https://railway.app/) | Hosting Laravel (serverless dormant) |
 | [Supabase](https://supabase.com/) | PostgreSQL hosting (free 500MB) |
-| [Upstash](https://upstash.com/) | Redis serverless (free 100MB) |
 
 ### Frontend
 | Repo | Tech |

@@ -14,8 +14,6 @@ RUN apk add --no-cache \
     $PHPIZE_DEPS \
     linux-headers \
     && docker-php-ext-install pdo_mysql pdo_pgsql bcmath gd \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
     && apk del $PHPIZE_DEPS linux-headers
 
 # Install Composer

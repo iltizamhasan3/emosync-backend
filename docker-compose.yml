@@ -23,24 +23,6 @@ services:
     networks:
       - emosync_network
 
-  redis:
-    image: redis:7.2-alpine
-    container_name: emosync_redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-      - ./docker/redis/redis.conf:/etc/redis/redis.conf
-    command: redis-server /etc/redis/redis.conf
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - emosync_network
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: emosync_phpmyadmin
@@ -72,14 +54,10 @@ services:
       DB_DATABASE: emosync
       DB_USERNAME: emosync
       DB_PASSWORD: emosync123
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: "null"
     volumes:
       - .:/var/www/html
     depends_on:
       - mysql
-      - redis
     networks:
       - emosync_network
 
@@ -90,5 +68,4 @@ networks:
 volumes:
   mysql_data:
     driver: local
-  redis_data:
-    driver: local
+
