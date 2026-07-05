@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->hasMany(MoodCheckin::class);
     }
 
+    public function latestMoodCheckin()
+    {
+        return $this->hasOne(MoodCheckin::class)->latestOfMany();
+    }
+
     public function friendships()
     {
         return $this->hasMany(Friendship::class, 'user_id');

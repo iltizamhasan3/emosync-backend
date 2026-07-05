@@ -26,7 +26,9 @@ class FriendshipController extends Controller
                     ->pluck('user_id')
             );
 
-        $friends = User::whereIn('id', $friendIds)->paginate(20);
+        $friends = User::whereIn('id', $friendIds)
+            ->with('latestMoodCheckin')
+            ->paginate(20);
 
         return response()->json([
             'success' => true,
@@ -38,6 +40,8 @@ class FriendshipController extends Controller
                     'email' => $friend->email,
                     'avatar' => $friend->avatar ?? 'male',
                     'is_premium' => $friend->isPremium(),
+                    'mood' => $friend->latestMoodCheckin ? $friend->latestMoodCheckin->mood : null,
+                    'last_checkin_at' => $friend->latestMoodCheckin ? $friend->latestMoodCheckin->created_at->diffForHumans() : null,
                 ];
             })
         ]);
