@@ -4,15 +4,13 @@
   <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel"/>
   <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP"/>
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
-  <img src="https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"/>
-  <img src="https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white" alt="Railway"/>
   <img src="https://img.shields.io/badge/Sanctum-4A5568?style=for-the-badge&logo=laravel&logoColor=white" alt="Sanctum"/>
 </div>
 
 <br/>
 
 <p align="center">
-  🐘 REST API untuk mood tracking app &nbsp;·&nbsp; 🔐 Sanctum auth &nbsp;·&nbsp; 💬 Real-time chat &nbsp;·&nbsp; 💳 Simulasi pembayaran &nbsp;·&nbsp; 📊 Streak & dashboard
+  🐘 REST API untuk mood tracking app &nbsp;·&nbsp; 🔐 Sanctum auth &nbsp;·&nbsp; 💬 Chat &nbsp;·&nbsp; 💳 Simulasi pembayaran &nbsp;·&nbsp; 📊 Streak & dashboard
 </p>
 
 <hr/>
@@ -91,49 +89,11 @@
 
 ## 🛠️ Tech Stack
 
-### Backend
 | Teknologi | Kegunaan |
 |-----------|----------|
 | [Laravel 13](https://laravel.com/) | Framework PHP |
 | [Sanctum](https://laravel.com/docs/sanctum) | API token auth (30 hari expiry) |
 | [MySQL](https://www.mysql.com/) / [PostgreSQL](https://www.postgresql.org/) | Database relasional |
-| [File Cache](https://laravel.com/docs/cache) | Cache driver |
-| [Database Session](https://laravel.com/docs/session) | Session driver |
-| [Database Queue](https://laravel.com/docs/queues) | Queue driver |
-
-### Deployment
-| Layanan | Fungsi |
-|---------|--------|
-| [Railway](https://railway.app/) | Hosting Laravel (serverless dormant) |
-| [Supabase](https://supabase.com/) | PostgreSQL hosting (free 500MB) |
-
-### Frontend
-| Repo | Tech |
-|------|------|
-| [emosync](https://github.com/iltizamhasan3/emosync) | Flutter + Dart |
-
-<hr/>
-
-## 🚀 Deployed API
-
-```
-Base URL: https://emosync-backend-production.up.railway.app/api
-```
-
-Response format:
-```json
-{
-  "success": true,
-  "data": { ... },
-  "message": "..."
-}
-```
-
-Semua protected endpoint require header:
-```
-Authorization: Bearer <sanctum_token>
-Accept: application/json
-```
 
 <hr/>
 
@@ -143,9 +103,9 @@ Accept: application/json
 
 **📈 Dashboard Cerdas** — Rata-rata mood (happy=4, calm=3, anxious=2, sad=1) + distribusi mingguan + grafik.
 
-**💬 Real-time Chat** — Sistem pesan antar teman dengan unread counter per-friend dan auto mark-as-read.
+**💬 Chat** — Sistem pesan antar teman dengan unread counter per-friend dan auto mark-as-read.
 
-**💳 Simulasi Pembayaran** — Flow end-to-end: create → VA/QRIS → simulate bayar → premium aktif. Virtual account per transaksi.
+**💳 Simulasi Pembayaran** — Flow end-to-end: create → VA/QRIS → simulate bayar → premium aktif.
 
 **🔒 Premium Gating** — Konten premium otomatis tersembunyi dari user free. Langganan dengan expiry date.
 
@@ -153,24 +113,15 @@ Accept: application/json
 
 <hr/>
 
-## 🗄️ Database
-
-| Tabel | Fungsi |
-|-------|--------|
-| `users` | Akun, premium status, streak |
-| `mood_checkins` | Catatan mood harian |
-| `pemicus` | Trigger mood (stres, lelah, dll) |
-| `checkin_pemicus` | Relasi checkin ↔ pemicu |
-| `friendships` | Relasi pertemanan + status |
-| `chats` | Pesan antar teman |
-| `contents` | Artikel/video/kutipan |
-| `subscriptions` | Langganan premium |
-| `transactions` | Riwayat pembayaran |
-| `user_settings` | Notifikasi & privasi per user |
-
-<hr/>
-
 ## 🖥️ Running Locally
+
+### Prasyarat
+- PHP ^8.3
+- Composer
+- MySQL or PostgreSQL
+- Node.js & npm (untuk Vite build)
+
+### Setup
 
 ```bash
 git clone https://github.com/iltizamhasan3/emosync-backend.git
@@ -179,13 +130,50 @@ cd emosync-backend
 composer install
 cp .env.example .env
 php artisan key:generate
+```
 
-# Setup MySQL database, lalu:
+### Database
+
+Buat database MySQL, lalu atur `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=emosync
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Jalankan migrasi & seeder:
+
+```bash
 php artisan migrate
 php artisan db:seed --class=PemicuSeeder
+```
 
+### Jalankan Server
+
+```bash
 php artisan serve
 # API aktif di http://localhost:8000/api
+```
+
+### Response Format
+
+```json
+{
+  "success": true,
+  "data": { ... },
+  "message": "..."
+}
+```
+
+Semua protected endpoint require header:
+
+```
+Authorization: Bearer <sanctum_token>
+Accept: application/json
 ```
 
 <hr/>
@@ -193,7 +181,8 @@ php artisan serve
 <div align="center">
   <p>Dibuat dengan ❤️ menggunakan Laravel & Flutter</p>
   <p>
-    <a href="https://github.com/iltizamhasan3/emosync">Frontend Repo</a> •
-    <a href="https://github.com/iltizamhasan3/emosync-backend">Backend Repo</a>
+    <a href="https://github.com/iltizamhasan3/emosync">Frontend (Flutter)</a> •
+    <a href="https://github.com/iltizamhasan3/emosync-backend">Backend API</a> •
+    <a href="https://github.com/iltizamhasan3/emosync-admin">Admin Panel</a>
   </p>
 </div>
