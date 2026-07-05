@@ -92,8 +92,15 @@
 | Teknologi | Kegunaan |
 |-----------|----------|
 | [Laravel 13](https://laravel.com/) | Framework PHP |
-| [Sanctum](https://laravel.com/docs/sanctum) | API token auth (30 hari expiry) |
-| [MySQL](https://www.mysql.com/) / [PostgreSQL](https://www.postgresql.org/) | Database relasional |
+| [PHP ^8.3](https://www.php.net/) | Bahasa pemrograman |
+| [Sanctum ^4.0](https://laravel.com/docs/sanctum) | API token auth (30 hari expiry) |
+| [PostgreSQL (Supabase)](https://supabase.com/) | Database relasional utama (production) |
+| [MySQL 8.0](https://www.mysql.com/) | Database relasional (local dev) |
+| [Supabase Storage (S3)](https://supabase.com/) | File & media storage |
+| [Docker](https://www.docker.com/) | Containerization (Nginx + PHP-FPM + Supervisor) |
+| [Vite 8](https://vitejs.dev/) | Asset bundler |
+| [TailwindCSS 4](https://tailwindcss.com/) | CSS utility framework |
+| [Node.js](https://nodejs.org/) | Build toolchain |
 
 <hr/>
 
@@ -118,8 +125,8 @@
 ### Prasyarat
 - PHP ^8.3
 - Composer
-- MySQL or PostgreSQL
-- Node.js & npm (untuk Vite build)
+- PostgreSQL (atau pakai Docker)
+- Node.js & npm
 
 ### Setup
 
@@ -134,8 +141,19 @@ php artisan key:generate
 
 ### Database
 
-Buat database MySQL, lalu atur `.env`:
+Project mendukung PostgreSQL (production) dan MySQL (local). Atur `.env` sesuai kebutuhan:
 
+**PostgreSQL (default):**
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=emosync
+DB_USERNAME=postgres
+DB_PASSWORD=
+```
+
+**MySQL:**
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -143,6 +161,11 @@ DB_PORT=3306
 DB_DATABASE=emosync
 DB_USERNAME=root
 DB_PASSWORD=
+```
+
+Atau jalankan dengan Docker (MySQL):
+```bash
+docker compose up -d
 ```
 
 Jalankan migrasi & seeder:
