@@ -21,7 +21,7 @@ class ContentController extends Controller
                 $isPremium = $user->isPremium();
             }
 
-            $cacheKey = 'contents_all_' . ($isPremium ? 'premium' : 'free');
+            $cacheKey = 'contents_v2_' . ($isPremium ? 'premium' : 'free');
             
             $result = Cache::remember($cacheKey, 3600, function () use ($isPremium) {
                 $contents = Content::paginate(20);
@@ -39,7 +39,7 @@ class ContentController extends Controller
                         'is_premium' => $content->is_premium,
                         'is_locked' => $isLocked,
                     ];
-                });
+                })->values()->toArray();
 
                 return [
                     'data' => $formattedContents,
