@@ -21,13 +21,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy codebase
-COPY . .
-
-# Install dependencies (production mode)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Ensure required directories exist and set permissions
+# Ensure required directories exist before composer install (post-autoload-dump needs bootstrap/cache)
 RUN mkdir -p \
         storage/framework/sessions \
         storage/framework/views \
@@ -37,6 +31,12 @@ RUN mkdir -p \
         storage/app/public \
         bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
+
+# Copy codebase
+COPY . .
+
+# Install dependencies (production mode)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Copy runtime configs
 COPY docker/nginx.conf /etc/nginx/nginx.conf
