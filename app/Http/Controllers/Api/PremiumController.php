@@ -17,7 +17,7 @@ class PremiumController extends Controller
     {
         $user = $request->user();
         
-        $data = Cache::remember('premium_status_' . $user->id, 60, function () use ($user) {
+        $data = Cache::remember('premium_status_' . $user->id, 300, function () use ($user) {
             return [
                 'is_premium' => $user->isPremium(),
                 'plan' => $user->premium_plan,

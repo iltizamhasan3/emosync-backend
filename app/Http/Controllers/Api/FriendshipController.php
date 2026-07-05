@@ -25,7 +25,7 @@ class FriendshipController extends Controller
             ], 401);
         }
         
-        $result = Cache::remember('friends_' . $user->id, 60, function () use ($user) {
+        $result = Cache::remember('friends_' . $user->id, 300, function () use ($user) {
             $friendIds = Friendship::where('user_id', $user->id)
                 ->where('status', 'accepted')
                 ->pluck('friend_id')
@@ -247,7 +247,7 @@ class FriendshipController extends Controller
         
         $userId = $user->id;
 
-        $result = \Illuminate\Support\Facades\Cache::remember('friend_requests_' . $userId, 30, function () use ($userId) {
+        $result = \Illuminate\Support\Facades\Cache::remember('friend_requests_' . $userId, 120, function () use ($userId) {
             $requests = Friendship::where(function($query) use ($userId) {
                     $query->where('friend_id', $userId)
                           ->orWhere('user_id', $userId);

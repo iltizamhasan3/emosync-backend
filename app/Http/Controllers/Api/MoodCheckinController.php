@@ -13,7 +13,7 @@ class MoodCheckinController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $checkins = Cache::remember('checkins_' . $user->id, 60, function () use ($user) {
+        $checkins = Cache::remember('checkins_' . $user->id, 300, function () use ($user) {
             return $user->moodCheckins()
                 ->with(['pemicus' => function($query) {
                     $query->select('pemicus.id', 'pemicus.nama');
@@ -88,7 +88,7 @@ class MoodCheckinController extends Controller
         $user = $request->user();
         $userId = $user->id;
 
-        $data = Cache::remember('dashboard_' . $userId, 60, function () use ($user, $userId) {
+        $data = Cache::remember('dashboard_' . $userId, 300, function () use ($user, $userId) {
             $streak = $user->streak;
 
             $weeklyCheckins = $user->moodCheckins()

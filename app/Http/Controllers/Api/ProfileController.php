@@ -15,7 +15,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         
-        $data = Cache::remember('profile_' . $user->id, 120, function () use ($user) {
+        $data = Cache::remember('profile_' . $user->id, 600, function () use ($user) {
             return [
                 'id' => $user->id,
                 'name' => $user->name,

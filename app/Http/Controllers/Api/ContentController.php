@@ -23,7 +23,7 @@ class ContentController extends Controller
 
             $cacheKey = 'contents_all_' . ($isPremium ? 'premium' : 'free');
             
-            $result = Cache::remember($cacheKey, 300, function () use ($isPremium) {
+            $result = Cache::remember($cacheKey, 3600, function () use ($isPremium) {
                 $contents = Content::paginate(20);
 
                 $formattedContents = $contents->map(function($content) use ($isPremium) {

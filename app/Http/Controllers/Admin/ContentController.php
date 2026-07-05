@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Content;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -67,6 +68,9 @@ class ContentController extends Controller
 
         $content = Content::create($validated);
 
+        Cache::forget('contents_all_premium');
+        Cache::forget('contents_all_free');
+
         return response()->json([
             'success' => true,
             'message' => 'Konten berhasil dibuat.',
@@ -96,6 +100,9 @@ class ContentController extends Controller
         ]);
 
         $content->update($validated);
+
+        Cache::forget('contents_all_premium');
+        Cache::forget('contents_all_free');
 
         return response()->json([
             'success' => true,
@@ -130,6 +137,9 @@ class ContentController extends Controller
         }
 
         $content->delete();
+
+        Cache::forget('contents_all_premium');
+        Cache::forget('contents_all_free');
 
         return response()->json([
             'success' => true,
