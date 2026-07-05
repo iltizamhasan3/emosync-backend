@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
@@ -14,9 +13,10 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        
-        $data = Cache::remember('profile_' . $user->id, 600, function () use ($user) {
-            return [
+
+        return response()->json([
+            'success' => true,
+            'data' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'username' => $user->username,
@@ -27,12 +27,7 @@ class ProfileController extends Controller
                 'premium_expiry' => $user->premium_expiry,
                 'streak' => $user->streak,
                 'created_at' => $user->created_at,
-            ];
-        });
-
-        return response()->json([
-            'success' => true,
-            'data' => $data
+            ]
         ]);
     }
 
@@ -64,8 +59,6 @@ class ProfileController extends Controller
         
         $user->save();
 
-        Cache::forget('profile_' . $user->id);
-        
         return response()->json([
             'success' => true,
             'message' => 'Profil berhasil diperbarui',

@@ -53,13 +53,6 @@ class PaymentController extends Controller
     public function createTransaction(Request $request)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $validator = Validator::make($request->all(), [
             'plan' => 'required|in:monthly,yearly',
@@ -145,13 +138,6 @@ class PaymentController extends Controller
     public function checkTransaction($transactionId)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $transaction = Transaction::where('transaction_id', $transactionId)
             ->where('user_id', $user->id)
@@ -191,13 +177,6 @@ class PaymentController extends Controller
     public function simulatePayment($transactionId)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $transaction = Transaction::where('transaction_id', $transactionId)
             ->where('user_id', $user->id)
@@ -267,13 +246,6 @@ class PaymentController extends Controller
     public function cancelTransaction($transactionId)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $transaction = Transaction::where('transaction_id', $transactionId)
             ->where('user_id', $user->id)
@@ -300,13 +272,6 @@ class PaymentController extends Controller
     public function getUserTransactions()
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $transactions = Transaction::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')

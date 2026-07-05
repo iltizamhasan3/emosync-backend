@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\MoodCheckin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class MoodCheckinController extends Controller
@@ -13,15 +12,13 @@ class MoodCheckinController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $checkins = Cache::remember('checkins_' . $user->id, 300, function () use ($user) {
-            return $user->moodCheckins()
-                ->with(['pemicus' => function($query) {
-                    $query->select('pemicus.id', 'pemicus.nama');
-                }])
-                ->orderBy('created_at', 'desc')
-                ->limit(30)
-                ->get();
-        });
+        $checkins = $user->moodCheckins()
+            ->with(['pemicus' => function($query) {
+                $query->select('pemicus.id', 'pemicus.nama');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->limit(30)
+            ->get();
 
         return response()->json([
             'success' => true,
@@ -67,9 +64,6 @@ class MoodCheckinController extends Controller
             
             DB::commit();
 
-            Cache::forget('checkins_' . $user->id);
-            Cache::forget('dashboard_' . $user->id);
-            
             return response()->json([
                 'success' => true,
                 'data' => $checkin->load('pemicus')
@@ -88,33 +82,29 @@ class MoodCheckinController extends Controller
         $user = $request->user();
         $userId = $user->id;
 
-        $data = Cache::remember('dashboard_' . $userId, 300, function () use ($user, $userId) {
-            $streak = $user->streak;
+        $streak = $user->streak;
 
-            $weeklyCheckins = $user->moodCheckins()
-                ->where('created_at', '>=', now()->subDays(7))
-                ->orderBy('created_at', 'asc')
-                ->get(['id', 'mood', 'catatan', 'created_at']);
+        $weeklyCheckins = $user->moodCheckins()
+            ->where('created_at', '>=', now()->subDays(7))
+            ->orderBy('created_at', 'asc')
+            ->get(['id', 'mood', 'catatan', 'created_at']);
 
-            $moodDistribution = MoodCheckin::where('user_id', $userId)
-                ->select('mood', DB::raw('count(*) as count'))
-                ->groupBy('mood')
-                ->pluck('count', 'mood')
-                ->toArray();
+        $moodDistribution = MoodCheckin::where('user_id', $userId)
+            ->select('mood', DB::raw('count(*) as count'))
+            ->groupBy('mood')
+            ->pluck('count', 'mood')
+            ->toArray();
 
-            $averageMood = $this->calculateAverageMood($userId);
+        $averageMood = $this->calculateAverageMood($userId);
 
-            return [
+        return response()->json([
+            'success' => true,
+            'data' => [
                 'streak' => $streak,
                 'rata_rata_mood' => $averageMood,
                 'mood_distribution' => $moodDistribution,
                 'weekly_checkins' => $weeklyCheckins,
-            ];
-        });
-
-        return response()->json([
-            'success' => true,
-            'data' => $data
+            ]
         ]);
     }
 

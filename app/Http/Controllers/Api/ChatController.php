@@ -15,13 +15,6 @@ class ChatController extends Controller
     public function getMessages($friendId)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         // Cek apakah friend exists
         $friend = User::find($friendId);
@@ -32,18 +25,7 @@ class ChatController extends Controller
             ], 404);
         }
 
-        // Cek apakah mereka berteman
-        $isFriend = \App\Models\Friendship::where(function($query) use ($user, $friendId) {
-            $query->where('user_id', $user->id)
-                  ->where('friend_id', $friendId)
-                  ->where('status', 'accepted');
-        })->orWhere(function($query) use ($user, $friendId) {
-            $query->where('user_id', $friendId)
-                  ->where('friend_id', $user->id)
-                  ->where('status', 'accepted');
-        })->exists();
-
-        if (!$isFriend) {
+        if (!$user->isFriendWith($friendId)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Anda harus berteman untuk melihat pesan'
@@ -86,13 +68,6 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $validator = Validator::make($request->all(), [
             'friend_id' => 'required|exists:users,id',
@@ -116,18 +91,7 @@ class ChatController extends Controller
             ], 400);
         }
 
-        // Cek apakah mereka berteman
-        $isFriend = \App\Models\Friendship::where(function($query) use ($user, $friendId) {
-            $query->where('user_id', $user->id)
-                  ->where('friend_id', $friendId)
-                  ->where('status', 'accepted');
-        })->orWhere(function($query) use ($user, $friendId) {
-            $query->where('user_id', $friendId)
-                  ->where('friend_id', $user->id)
-                  ->where('status', 'accepted');
-        })->exists();
-
-        if (!$isFriend) {
+        if (!$user->isFriendWith($friendId)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Anda harus berteman terlebih dahulu untuk mengirim pesan'
@@ -160,13 +124,6 @@ class ChatController extends Controller
     public function getUnreadCount()
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $count = Chat::where('receiver_id', $user->id)
             ->where('is_read', false)
@@ -184,13 +141,6 @@ class ChatController extends Controller
     public function getUnreadPerFriend()
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         $unread = Chat::where('receiver_id', $user->id)
             ->where('is_read', false)
@@ -221,13 +171,6 @@ class ChatController extends Controller
     public function markAsRead($friendId)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
 
         Chat::where('receiver_id', $user->id)
             ->where('sender_id', $friendId)

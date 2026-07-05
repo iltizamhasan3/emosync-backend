@@ -58,20 +58,6 @@ class User extends Authenticatable
         return $this->hasMany(Friendship::class, 'user_id');
     }
 
-    public function friends()
-    {
-        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
-            ->wherePivot('status', 'accepted')
-            ->withPivot('status', 'created_at');
-    }
-
-    public function friendRequests()
-    {
-        return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
-            ->wherePivot('status', 'pending')
-            ->withPivot('id', 'created_at');
-    }
-
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
@@ -140,5 +126,18 @@ class User extends Authenticatable
             $this->load('settings');
         }
         return $this->settings;
+    }
+
+    public function isFriendWith($friendId)
+    {
+        return Friendship::where(function ($q) use ($friendId) {
+            $q->where('user_id', $this->id)
+              ->where('friend_id', $friendId)
+              ->where('status', 'accepted');
+        })->orWhere(function ($q) use ($friendId) {
+            $q->where('user_id', $friendId)
+              ->where('friend_id', $this->id)
+              ->where('status', 'accepted');
+        })->exists();
     }
 }

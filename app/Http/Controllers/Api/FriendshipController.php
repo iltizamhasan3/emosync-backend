@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Friendship;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,55 +16,38 @@ class FriendshipController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
-        
-        $result = Cache::remember('friends_' . $user->id, 300, function () use ($user) {
-            $friendIds = Friendship::where('user_id', $user->id)
-                ->where('status', 'accepted')
-                ->pluck('friend_id')
-                ->merge(
-                    Friendship::where('friend_id', $user->id)
-                        ->where('status', 'accepted')
-                        ->pluck('user_id')
-                );
-            
-            $friends = User::whereIn('id', $friendIds)->paginate(20);
 
-            return [
-                'data' => $friends->map(function($friend) {
-                    return [
-                        'id' => $friend->id,
-                        'name' => $friend->name,
-                        'username' => $friend->username,
-                        'email' => $friend->email,
-                        'avatar' => $friend->avatar ?? 'male',
-                        'is_premium' => $friend->isPremium(),
-                    ];
-                })
-            ];
-        });
+        $friendIds = Friendship::where('user_id', $user->id)
+            ->where('status', 'accepted')
+            ->pluck('friend_id')
+            ->merge(
+                Friendship::where('friend_id', $user->id)
+                    ->where('status', 'accepted')
+                    ->pluck('user_id')
+            );
 
-        return response()->json(array_merge(['success' => true], $result));
+        $friends = User::whereIn('id', $friendIds)->paginate(20);
+
+        return response()->json([
+            'success' => true,
+            'data' => $friends->map(function($friend) {
+                return [
+                    'id' => $friend->id,
+                    'name' => $friend->name,
+                    'username' => $friend->username,
+                    'email' => $friend->email,
+                    'avatar' => $friend->avatar ?? 'male',
+                    'is_premium' => $friend->isPremium(),
+                ];
+            })
+        ]);
     }
 
     // ============ ADD FRIEND REQUEST ============
     public function add(Request $request)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
-        
+
         // Validasi input
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255'
@@ -142,9 +124,6 @@ class FriendshipController extends Controller
             ]);
             
             DB::commit();
-
-            Cache::forget('friend_requests_' . $userId);
-            Cache::forget('friend_requests_' . $friendId);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -173,13 +152,6 @@ class FriendshipController extends Controller
     public function accept($id)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
         
         $userId = $user->id;
         
@@ -212,11 +184,6 @@ class FriendshipController extends Controller
         $friendship->status = 'accepted';
         $friendship->save();
 
-        Cache::forget('friend_requests_' . $userId);
-        Cache::forget('friend_requests_' . $friendship->user_id);
-        Cache::forget('friends_' . $userId);
-        Cache::forget('friends_' . $friendship->user_id);
-        
         // Kembalikan data user yang mengirim
         $friend = User::find($friendship->user_id);
         
@@ -237,42 +204,31 @@ class FriendshipController extends Controller
     public function requests()
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
-        
+
         $userId = $user->id;
 
-        $result = \Illuminate\Support\Facades\Cache::remember('friend_requests_' . $userId, 120, function () use ($userId) {
-            $requests = Friendship::where(function($query) use ($userId) {
-                    $query->where('friend_id', $userId)
-                          ->orWhere('user_id', $userId);
-                })
-                ->where('status', 'pending')
-                ->get();
-            
-            if ($requests->isEmpty()) {
-                return [];
-            }
-            
+        $requests = Friendship::where(function($query) use ($userId) {
+                $query->where('friend_id', $userId)
+                      ->orWhere('user_id', $userId);
+            })
+            ->where('status', 'pending')
+            ->get();
+
+        $data = [];
+        if ($requests->isNotEmpty()) {
             $otherUserIds = $requests->map(function ($req) use ($userId) {
                 return ($userId == $req->friend_id) ? $req->user_id : $req->friend_id;
             });
-            
+
             $otherUsers = User::whereIn('id', $otherUserIds)->get()->keyBy('id');
-            
-            $data = [];
+
             foreach ($requests as $request) {
                 $otherUserId = ($userId == $request->friend_id) ? $request->user_id : $request->friend_id;
                 $otherUser = $otherUsers->get($otherUserId);
-                
+
                 if ($otherUser) {
                     $status = ($userId == $request->friend_id) ? 'incoming' : 'outgoing';
-                    
+
                     $data[] = [
                         'id' => $otherUser->id,
                         'name' => $otherUser->name,
@@ -285,13 +241,11 @@ class FriendshipController extends Controller
                     ];
                 }
             }
-            
-            return $data;
-        });
+        }
 
         return response()->json([
             'success' => true,
-            'data' => $result
+            'data' => $data
         ]);
     }
 
@@ -299,14 +253,7 @@ class FriendshipController extends Controller
     public function search(Request $request)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
-        
+
         $validator = Validator::make($request->all(), [
             'q' => 'required|string|min:2'
         ]);
@@ -346,14 +293,7 @@ class FriendshipController extends Controller
     public function destroy($id)
     {
         $user = Auth::user();
-        
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User tidak ditemukan'
-            ], 401);
-        }
-        
+
         // Cari friendship (bisa accepted atau pending)
         $friendship = Friendship::where(function($query) use ($user, $id) {
             $query->where('user_id', $user->id)
@@ -372,11 +312,6 @@ class FriendshipController extends Controller
         
         $friendship->delete();
 
-        Cache::forget('friend_requests_' . $user->id);
-        Cache::forget('friend_requests_' . $id);
-        Cache::forget('friends_' . $user->id);
-        Cache::forget('friends_' . $id);
-        
         return response()->json([
             'success' => true,
             'message' => 'Berhasil menghapus teman'

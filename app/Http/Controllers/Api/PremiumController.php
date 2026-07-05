@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class PremiumController extends Controller
@@ -16,18 +15,14 @@ class PremiumController extends Controller
     public function status(Request $request)
     {
         $user = $request->user();
-        
-        $data = Cache::remember('premium_status_' . $user->id, 300, function () use ($user) {
-            return [
-                'is_premium' => $user->isPremium(),
-                'plan' => $user->premium_plan,
-                'expires_at' => $user->premium_expiry,
-            ];
-        });
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            'data' => [
+                'is_premium' => $user->isPremium(),
+                'plan' => $user->premium_plan,
+                'expires_at' => $user->premium_expiry,
+            ]
         ]);
     }
 
@@ -105,8 +100,6 @@ class PremiumController extends Controller
             
             DB::commit();
 
-            Cache::forget('premium_status_' . $user->id);
-            
             return response()->json([
                 'success' => true,
                 'message' => 'Subscription successful',
@@ -151,8 +144,6 @@ class PremiumController extends Controller
             
             DB::commit();
 
-            Cache::forget('premium_status_' . $user->id);
-            
             return response()->json([
                 'success' => true,
                 'message' => 'Subscription cancelled'
