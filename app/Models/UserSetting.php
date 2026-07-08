@@ -13,11 +13,7 @@ class UserSetting extends Model
 
     protected $fillable = [
         'user_id',
-        'notif_daily_reminder',
-        'daily_reminder_time',
-        'notif_weekly_report',
-        'notif_friend_activity',
-        'notif_tips_insights',
+
         'privacy_show_mood',
         'privacy_allow_requests',
         'privacy_show_active',
@@ -25,10 +21,7 @@ class UserSetting extends Model
     ];
 
     protected $casts = [
-        'notif_daily_reminder' => 'boolean',
-        'notif_weekly_report' => 'boolean',
-        'notif_friend_activity' => 'boolean',
-        'notif_tips_insights' => 'boolean',
+
         'privacy_show_mood' => 'boolean',
         'privacy_allow_requests' => 'boolean',
         'privacy_show_active' => 'boolean',

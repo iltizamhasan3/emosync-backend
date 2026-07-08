@@ -18,13 +18,6 @@ class SettingsController extends Controller
         
         return response()->json([
             'success' => true,
-            'notification' => [
-                'daily_reminder' => $settings->notif_daily_reminder,
-                'daily_reminder_time' => $settings->daily_reminder_time,
-                'weekly_report' => $settings->notif_weekly_report,
-                'friend_activity' => $settings->notif_friend_activity,
-                'tips_insights' => $settings->notif_tips_insights,
-            ],
             'privacy' => [
                 'show_mood' => $settings->privacy_show_mood,
                 'allow_requests' => $settings->privacy_allow_requests,
@@ -33,53 +26,7 @@ class SettingsController extends Controller
         ]);
     }
 
-    /**
-     * Update notification settings
-     * 
-     * PUT /api/settings/notification
-     */
-    public function updateNotification(Request $request)
-    {
-        $request->validate([
-            'daily_reminder' => 'sometimes|boolean',
-            'daily_reminder_time' => 'sometimes|string',
-            'weekly_report' => 'sometimes|boolean',
-            'friend_activity' => 'sometimes|boolean',
-            'tips_insights' => 'sometimes|boolean',
-        ]);
 
-        $settings = $request->user()->getSettings();
-        
-        if ($request->has('daily_reminder')) {
-            $settings->notif_daily_reminder = $request->daily_reminder;
-        }
-        if ($request->has('daily_reminder_time')) {
-            $settings->daily_reminder_time = $request->daily_reminder_time;
-        }
-        if ($request->has('weekly_report')) {
-            $settings->notif_weekly_report = $request->weekly_report;
-        }
-        if ($request->has('friend_activity')) {
-            $settings->notif_friend_activity = $request->friend_activity;
-        }
-        if ($request->has('tips_insights')) {
-            $settings->notif_tips_insights = $request->tips_insights;
-        }
-        
-        $settings->save();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Notification settings updated successfully',
-            'data' => [
-                'daily_reminder' => $settings->notif_daily_reminder,
-                'daily_reminder_time' => $settings->daily_reminder_time,
-                'weekly_report' => $settings->notif_weekly_report,
-                'friend_activity' => $settings->notif_friend_activity,
-                'tips_insights' => $settings->notif_tips_insights,
-            ]
-        ]);
-    }
 
     /**
      * Update privacy settings

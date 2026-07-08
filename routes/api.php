@@ -31,7 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
-    Route::post('/device-tokens', [ProfileController::class, 'updateDeviceToken']);
     
     // Reports
     Route::get('/reports/weekly', [\App\Http\Controllers\Api\ReportController::class, 'weekly']);
@@ -60,7 +59,6 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Settings
     Route::get('/settings', [SettingsController::class, 'index']);
-    Route::put('/settings/notification', [SettingsController::class, 'updateNotification']);
     Route::put('/settings/privacy', [SettingsController::class, 'updatePrivacy']);
     
     // ============ CHAT ============

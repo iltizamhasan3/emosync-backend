@@ -74,20 +74,4 @@ class ProfileController extends Controller
         ]);
     }
 
-    // Update FCM Device Token
-    public function updateDeviceToken(Request $request)
-    {
-        $request->validate([
-            'device_token' => 'required|string'
-        ]);
-
-        $user = Auth::user();
-        $user->fcm_device_token = $request->device_token;
-        $user->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Device token berhasil disimpan'
-        ]);
-    }
 }

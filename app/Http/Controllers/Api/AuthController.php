@@ -42,10 +42,7 @@ class AuthController extends Controller
 
         // Create default settings
         $user->settings()->create([
-            'notif_daily_reminder' => true,
-            'notif_weekly_report' => true,
-            'notif_friend_activity' => false,
-            'notif_tips_insights' => true,
+
             'privacy_show_mood' => true,
             'privacy_allow_requests' => true,
             'privacy_show_active' => true,
