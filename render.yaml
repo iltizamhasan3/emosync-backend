@@ -22,13 +22,13 @@ services:
         value: database
       - key: DB_CONNECTION
         value: pgsql
-      - key: DB_HOST
-        fromSecret: DB_HOST_SUPABASE
       - key: DB_PORT
         value: "6543"
       - key: DB_DATABASE
         value: postgres
-      - key: DB_USERNAME
-        fromSecret: DB_USERNAME_SUPABASE
-      - key: DB_PASSWORD
-        fromSecret: DB_PASSWORD_SUPABASE
+
+      # 🔑 Set variabel di bawah ini via Render Dashboard → Environment:
+      # - APP_KEY        (isi dari .env kamu)
+      # - DB_HOST        (isi DB_HOST dari .env)
+      # - DB_USERNAME    (isi DB_USERNAME dari .env)
+      # - DB_PASSWORD    (isi DB_PASSWORD dari .env)
