@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
 
+# Render provides PORT env var; fallback to 8080 for Railway compatibility
+NGINX_PORT="${PORT:-8080}"
+
+# Substitute the nginx port placeholder
+sed -i "s/__NGINX_PORT__/$NGINX_PORT/g" /etc/nginx/nginx.conf
+
 # Ensure APP_KEY is set
 if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "SomeRandomString" ]; then
     php artisan key:generate --force
@@ -13,7 +19,7 @@ php artisan storage:link --no-interaction 2>/dev/null || true
 php artisan optimize:clear --no-interaction || true
 php artisan config:cache --no-interaction || true
 
-# Run migrations on startup (safe for Railway)
+# Run migrations on startup (safe for Railway / Render)
 php artisan migrate --force --no-interaction || true
 
 # Seed pemicu data (idempotent, safe to run on every deploy)
